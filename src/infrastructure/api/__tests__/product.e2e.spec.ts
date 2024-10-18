@@ -81,4 +81,62 @@ describe("E2E test for product", () => {
     expect(listResponseXML.text).toContain(`<product>`);
     expect(listResponseXML.text).toContain(`</products>`);
   });
+
+  it("should find a product by id", async () => {
+    const response = await request(app)
+    .post("/product")
+    .send({
+      type: "a",
+      name: "Product A",
+      price: 12
+    });
+    expect(response.status).toBe(200);
+
+    const listResponse = await request(app).get("/product").send();
+    expect(listResponse.status).toBe(200);
+    
+    const product1 = listResponse.body.products[0];
+    const id = product1.id;
+
+    const productResponse = await request(app).get(`/product/${id}`).send();
+    expect(productResponse.status).toBe(200);
+    expect(productResponse.body.name).toBe("Product A");
+    expect(productResponse.body.price).toBe(12);
+  });
+
+  it("should update a product by id", async () => {
+    const response = await request(app)
+    .post("/product")
+    .send({
+      type: "a",
+      name: "Product A",
+      price: 12
+    });
+    expect(response.status).toBe(200);
+
+    const listResponse = await request(app).get("/product").send();
+    expect(listResponse.status).toBe(200);
+    
+    const product1 = listResponse.body.products[0];
+    const id = product1.id;
+
+    const productResponse = await request(app).get(`/product/${id}`).send();
+    expect(productResponse.status).toBe(200);
+    expect(productResponse.body.name).toBe("Product A");
+    expect(productResponse.body.price).toBe(12);
+
+    const updateRequest = await request(app)
+    .put(`/product/${id}`)
+    .send({
+      type: "a",
+      name: "Product B",
+      price: 45
+    });
+    expect(updateRequest.status).toBe(200);
+
+    const updateResponse = await request(app).get(`/product/${id}`).send();
+    expect(updateResponse.status).toBe(200);
+    expect(updateResponse.body.name).toBe("Product B");
+    expect(updateResponse.body.price).toBe(45);
+  });
 });
