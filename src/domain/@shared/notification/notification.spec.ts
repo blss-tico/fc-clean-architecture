@@ -3,14 +3,16 @@ import Notification from "./notification";
 describe("Unit testss for notifications", () => {
   it("should create errors", () => {
     const notification = new Notification();
+
     const error = {
       message: "error message",
       context: "customer",
     };
-
     notification.addError(error);
 
-    expect(notification.messages("customer")).toBe("customer: error message,");
+    expect(notification.messages("customer")).toBe(
+      "customer: error message,"
+    );
 
     const error2 = {
       message: "error message2",
@@ -31,6 +33,7 @@ describe("Unit testss for notifications", () => {
     expect(notification.messages("customer")).toBe(
       "customer: error message,customer: error message2,"
     );
+
     expect(notification.messages()).toBe(
       "customer: error message,customer: error message2,order: error message3,"
     );
@@ -57,4 +60,43 @@ describe("Unit testss for notifications", () => {
 
     expect(notification.getErrors()).toEqual([error]);
   });
+
+  it("should get error for product", () => {
+    const notification = new Notification();
+    
+    const error = {
+      message: "error message",
+      context: "product",
+    };
+    notification.addError(error);
+
+    expect(notification.hasErrors()).toBe(true);
+    expect(notification.getErrors()).toEqual([error]);
+    expect(notification.messages("product")).toBe(
+      "product: error message,"
+    );
+  });
+
+  it("should get two errors for product", () => {
+    const notification = new Notification();
+    
+    const error = {
+      message: "error message1",
+      context: "product",
+    };
+    notification.addError(error);
+
+    const error2 = {
+      message: "error message2",
+      context: "product",
+    };
+    notification.addError(error2);
+
+    expect(notification.hasErrors()).toBe(true);
+    expect(notification.getErrors()).toHaveLength(2);
+    expect(notification.messages("product")).toBe(
+      "product: error message1,product: error message2,"
+    );
+  });
+
 });

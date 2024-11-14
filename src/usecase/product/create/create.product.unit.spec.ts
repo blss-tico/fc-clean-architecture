@@ -36,7 +36,7 @@ describe("Unit test create product use case", () => {
       input.name = "";
       const output = await productCreateUseCase.execute(input);  
     } catch (error: any) {
-      expect(error.message).toBe("Name is required");
+      expect(error.message).toBe("product: Name is required");
     }
     
     // await expect(output).rejects.toThrow("Name is required");
@@ -51,7 +51,7 @@ describe("Unit test create product use case", () => {
       input.price = -5;
       const output = await productCreateUseCase.execute(input);  
     } catch (error: any) {
-      expect(error.message).toBe("Price must be greater than zero");
+      expect(error.message).toBe("product: Price must be greater than zero");
     }
     
     // await expect(output).rejects.toThrow("Price must be greater than zero");
